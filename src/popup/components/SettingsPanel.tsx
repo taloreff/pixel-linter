@@ -9,8 +9,8 @@ export function SettingsPanel({ settings, onUpdate }: SettingsPanelProps) {
   return (
     <div className="settings">
       <label className="setting-row">
-        <span>Show warnings</span>
-        <input type="checkbox" checked={settings.showWarnings} onChange={(e) => onUpdate({ showWarnings: e.target.checked })} />
+        <span>Show suggestions</span>
+        <input type="checkbox" checked={settings.showSuggestions} onChange={(e) => onUpdate({ showSuggestions: e.target.checked })} />
       </label>
       <label className="setting-row">
         <span>Compact panel</span>

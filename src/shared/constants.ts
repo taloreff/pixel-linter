@@ -19,7 +19,12 @@ export const SHADOW_HOST_ID = 'pixel-linter-shadow-host';
 export const HIGHLIGHT_ID = 'pixel-linter-highlight';
 
 export const DEFAULT_SETTINGS: import('./types').StoredSettings = {
-  showWarnings: true,
+  showSuggestions: true,
   compactPanel: false,
   enabledSites: [],
 };
+
+export const MARKER_HOST_ID = 'pixel-linter-marker-host';
+export const MARKER_SIZE = 24;
+export const MARKER_COLOR = '#f59e0b';
+export const MARKER_Z_INDEX = '2147483645';

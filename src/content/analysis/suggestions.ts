@@ -1,4 +1,4 @@
-import type { DesignTokens, NormalizedElementData, Warning, TokenFrequency } from '@shared/types';
+import type { DesignTokens, NormalizedElementData, Suggestion, TokenFrequency } from '@shared/types';
 import { SPACING_TOLERANCE_PX, MIN_TAP_TARGET_PX } from '@shared/constants';
 
 function isInTokenSet<T>(value: T, tokens: TokenFrequency<T>[]): boolean {
@@ -21,16 +21,16 @@ function collectNonZeroSpacing(el: NormalizedElementData): number[] {
   return values;
 }
 
-export function generateWarnings(
+export function generateSuggestions(
   el: NormalizedElementData,
   tokens: DesignTokens,
-): Warning[] {
-  const warnings: Warning[] = [];
+): Suggestion[] {
+  const suggestions: Suggestion[] = [];
 
   // Uncommon font size
   if (el.fontSize > 0 && !isInTokenSet(el.fontSize, tokens.fontSizes)) {
     const common = tokens.fontSizes.slice(0, 3).map((t) => `${t.value}px`).join(', ');
-    warnings.push({
+    suggestions.push({
       type: 'uncommon-font-size',
       severity: 'warning',
       message: 'Uncommon font size on this page',
@@ -46,7 +46,7 @@ export function generateWarnings(
   if (offScaleValues.length > 0) {
     const uniqueOff = [...new Set(offScaleValues)];
     const common = tokens.spacingValues.slice(0, 4).map((t) => `${t.value}px`).join(', ');
-    warnings.push({
+    suggestions.push({
       type: 'off-spacing-scale',
       severity: 'warning',
       message: 'Spacing not aligned to page scale',
@@ -57,7 +57,7 @@ export function generateWarnings(
   // Unusual border radius
   if (el.borderRadius > 0 && !isInTokenSet(el.borderRadius, tokens.borderRadii)) {
     const common = tokens.borderRadii.map((t) => `${t.value}px`).join(', ');
-    warnings.push({
+    suggestions.push({
       type: 'unusual-radius',
       severity: 'info',
       message: 'Border radius differs from page pattern',
@@ -67,7 +67,7 @@ export function generateWarnings(
 
   // Small tap target (interactive only)
   if (el.isInteractive && el.height < MIN_TAP_TARGET_PX) {
-    warnings.push({
+    suggestions.push({
       type: 'small-tap-target',
       severity: 'warning',
       message: 'Smaller than typical interactive target',
@@ -77,7 +77,7 @@ export function generateWarnings(
 
   // Uncommon font weight
   if (!isInTokenSet(el.fontWeight, tokens.fontWeights)) {
-    warnings.push({
+    suggestions.push({
       type: 'uncommon-font-weight',
       severity: 'info',
       message: 'Uncommon font weight on this page',
@@ -91,7 +91,7 @@ export function generateWarnings(
     el.fontFamily !== tokens.fontFamilies[0].value &&
     !isInTokenSet(el.fontFamily, tokens.fontFamilies)
   ) {
-    warnings.push({
+    suggestions.push({
       type: 'mixed-font-family',
       severity: 'info',
       message: 'Different font family than dominant',
@@ -99,5 +99,5 @@ export function generateWarnings(
     });
   }
 
-  return warnings;
+  return suggestions;
 }

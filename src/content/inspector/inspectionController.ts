@@ -122,8 +122,8 @@ export class InspectionController {
     try {
       const data = this.analyzer.inspectElement(target);
 
-      if (!this.settings.showWarnings) {
-        data.warnings = [];
+      if (!this.settings.showSuggestions) {
+        data.suggestions = [];
       }
 
       const rect = target.getBoundingClientRect();
