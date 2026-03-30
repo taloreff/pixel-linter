@@ -104,10 +104,12 @@ describe('buildFrequencyMaps', () => {
     const elements = [
       makeElement({ textColor: '#000000' }),
       makeElement({ textColor: 'transparent' }),
-      makeElement({ backgroundColor: 'unknown' }),
+      makeElement({ textColor: '#111111', backgroundColor: 'unknown' }),
     ];
     const maps = buildFrequencyMaps(elements);
+    // Element 1 textColor counted, element 3 textColor counted independently
     expect(maps.textColors.get('#000000')).toBe(1);
+    expect(maps.textColors.get('#111111')).toBe(1);
     expect(maps.textColors.has('transparent')).toBe(false);
     expect(maps.backgroundColors.has('unknown')).toBe(false);
   });

@@ -27,8 +27,10 @@ export function buildFrequencyMaps(elements: NormalizedElementData[]): Frequency
     increment(maps.fontWeights, el.fontWeight);
     increment(maps.lineHeights, el.lineHeight);
 
-    if (isValidColor(el.textColor) && isValidColor(el.backgroundColor)) {
+    if (isValidColor(el.textColor)) {
       increment(maps.textColors, el.textColor);
+    }
+    if (isValidColor(el.backgroundColor)) {
       increment(maps.backgroundColors, el.backgroundColor);
     }
 
