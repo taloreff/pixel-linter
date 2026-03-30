@@ -26,5 +26,6 @@ export const DEFAULT_SETTINGS: import('./types').StoredSettings = {
 
 export const MARKER_HOST_ID = 'pixel-linter-marker-host';
 export const MARKER_SIZE = 24;
-export const MARKER_COLOR = '#f59e0b';
+export const MARKER_COLOR = '#EAB308';          // was '#f59e0b'
+export const MARKER_CRITICAL_COLOR = '#EF4444';
 export const MARKER_Z_INDEX = '2147483645';
