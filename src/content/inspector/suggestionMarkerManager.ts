@@ -1,5 +1,5 @@
 import type { Suggestion } from '@shared/types';
-import { MARKER_HOST_ID, MARKER_SIZE, MARKER_COLOR, MARKER_Z_INDEX } from '@shared/constants';
+import { MARKER_HOST_ID, MARKER_SIZE, MARKER_COLOR, MARKER_CRITICAL_COLOR, MARKER_Z_INDEX } from '@shared/constants';
 
 export interface MarkerData {
   element: Element;
@@ -25,8 +25,7 @@ const MARKER_STYLES = `
     background: ${MARKER_COLOR};
     color: white;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,6 +38,10 @@ const MARKER_STYLES = `
 
   .marker:hover {
     transform: scale(1.15);
+  }
+
+  .marker.critical {
+    background: ${MARKER_CRITICAL_COLOR};
   }
 
   .tooltip {
@@ -129,7 +132,11 @@ export class SuggestionMarkerManager {
     for (const item of items) {
       const marker = document.createElement('div');
       marker.className = 'marker';
-      marker.textContent = String(item.suggestions.length);
+      const hasCritical = item.suggestions.some(s => s.severity === 'critical');
+      marker.textContent = hasCritical ? '!' : '💡';
+      if (hasCritical) {
+        marker.classList.add('critical');
+      }
       this.markerDataMap.set(marker, item);
 
       const rect = item.element.getBoundingClientRect();
@@ -249,16 +256,25 @@ export class SuggestionMarkerManager {
   }
 
   private renderTooltipContent(data: MarkerData): string {
-    const count = data.suggestions.length;
-    const header = `${count} Suggestion${count !== 1 ? 's' : ''} for &lt;${data.tag}&gt;`;
+    const critical = data.suggestions.filter(s => s.severity === 'critical');
+    const nonCritical = data.suggestions.filter(s => s.severity !== 'critical');
 
-    const cards = data.suggestions.map((s) => {
-      const icon = s.severity === 'warning' ? '⚠️' : '💡';
+    const parts: string[] = [];
+    if (critical.length > 0) parts.push(`${critical.length} Issue${critical.length !== 1 ? 's' : ''}`);
+    if (nonCritical.length > 0) parts.push(`${nonCritical.length} Suggestion${nonCritical.length !== 1 ? 's' : ''}`);
+    const header = `${parts.join(', ')} for &lt;${data.tag}&gt;`;
+
+    // Sort critical first
+    const sorted = [...critical, ...nonCritical];
+
+    const cards = sorted.map((s) => {
+      const icon = s.severity === 'critical' ? '🔴' : (s.severity === 'warning' ? '⚠️' : '💡');
+      const borderStyle = s.severity === 'critical' ? 'border-left: 3px solid #EF4444;' : '';
       const detail = s.detail
         ? `<div class="suggestion-card-detail">${this.escapeHtml(s.detail)}</div>`
         : '';
       return `
-        <div class="suggestion-card">
+        <div class="suggestion-card" style="${borderStyle}">
           <div class="suggestion-card-header">
             <span class="suggestion-card-icon">${icon}</span>
             <span class="suggestion-card-message">${this.escapeHtml(s.message)}</span>

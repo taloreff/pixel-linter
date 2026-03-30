@@ -215,6 +215,10 @@ const PANEL_STYLES = `
     color: #60a5fa;
   }
 
+  .suggestion-icon.severity-critical {
+    color: #f87171;
+  }
+
   .suggestion-text {
     display: flex;
     flex-direction: column;
@@ -420,8 +424,8 @@ export class PanelRenderer {
     if (data.suggestions.length > 0) {
       const suggestionItems = data.suggestions
         .map(w => {
-          const iconClass = w.severity === 'warning' ? 'severity-warning' : 'severity-info';
-          const icon = w.severity === 'warning' ? '⚠' : 'ℹ';
+          const icon = w.severity === 'critical' ? '🔴' : (w.severity === 'warning' ? '⚠' : 'ℹ');
+          const iconClass = w.severity === 'critical' ? 'severity-critical' : (w.severity === 'warning' ? 'severity-warning' : 'severity-info');
           const detail = w.detail
             ? `<span class="suggestion-detail">${this.escapeHtml(w.detail)}</span>`
             : '';
