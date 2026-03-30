@@ -1,0 +1,81 @@
+<h2>Pivot Decision: Where's the Real Pain?</h2>
+<p class="subtitle">The web bidi problem is already solved by RTL Toggle. The PDF problem is unsolved.</p>
+
+<div class="section">
+  <h3>The Landscape</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+    <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; border-left: 3px solid #f87171;">
+      <h4 style="color: #f87171; margin: 0 0 8px;">Web Page Bidi Fix</h4>
+      <p style="margin: 0; font-size: 13px; color: #aaa;">Already solved by RTL Toggle and similar extensions. We'd be building a marginally better version of an existing tool.</p>
+    </div>
+    <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; border-left: 3px solid #4ade80;">
+      <h4 style="color: #4ade80; margin: 0 0 8px;">PDF Bidi Fix</h4>
+      <p style="margin: 0; font-size: 13px; color: #aaa;">Unsolved problem. Real pain point. No good tool exists. LinkedIn, Indeed, etc. all generate broken RTL PDFs.</p>
+    </div>
+  </div>
+</div>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Full Pivot: PDF Fixer Only</h3>
+      <p>Build a tool that takes a broken-bidi PDF (from LinkedIn, etc.) and outputs a corrected PDF with proper RTL direction.</p>
+      <p style="font-size: 12px; color: #888;"><strong>How:</strong> User uploads PDF → we parse it with pdf-lib → detect and fix text direction → output corrected PDF</p>
+      <p style="font-size: 12px; color: #888;"><strong>Form:</strong> Could be a web app, CLI tool, or Chrome extension that intercepts PDF downloads</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>Solves an unsolved problem</li>
+          <li>Clear differentiation — no competition</li>
+          <li>High value for Hebrew job seekers</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>PDF parsing is complex (fonts, encoding)</li>
+          <li>Narrower use case</li>
+          <li>Different tech stack needed</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Hybrid: Smart Web Fix + PDF Export (Recommended)</h3>
+      <p>Keep the smart web bidi fixer, BUT add a killer feature: <strong>"Download as fixed PDF"</strong>. When user clicks download on LinkedIn etc., intercept and generate a clean RTL-correct PDF from the fixed DOM.</p>
+      <p style="font-size: 12px; color: #888;"><strong>How:</strong> Fix DOM first (our existing plan) → when user wants PDF, use the <em>fixed</em> page to generate a proper PDF via html2canvas + jsPDF or browser print API</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>Best of both worlds</li>
+          <li>Web fixing is still useful (RTL Toggle is dumb toggle, we're smarter)</li>
+          <li>PDF export is the differentiator</li>
+          <li>Uses DOM we already fixed — less PDF parsing complexity</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>Larger scope</li>
+          <li>PDF from DOM won't be identical to LinkedIn's layout</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Web Extension Only (Original Plan)</h3>
+      <p>Stick with the original Bidix plan — smart per-element bidi fixing on web pages. No PDF handling.</p>
+      <p style="font-size: 12px; color: #888;"><strong>Differentiation from RTL Toggle:</strong> Automatic (no manual toggle needed), per-element (not whole page), dynamic input handling, SPA support</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>Simplest scope</li>
+          <li>Well-defined architecture already designed</li>
+          <li>Still better than existing toggle extensions</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>Competing with existing extensions</li>
+          <li>Doesn't solve the PDF pain you showed</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div>

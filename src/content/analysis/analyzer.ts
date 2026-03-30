@@ -123,4 +123,38 @@ export class PageAnalyzer {
       suggestions,
     };
   }
+
+  getFlaggedElements(): { element: Element; suggestions: Suggestion[]; tag: string }[] {
+    if (!this.tokens) return [];
+
+    const raw = collectVisibleElements();
+    const normalized = normalizeAll(raw);
+    const flagged: { element: Element; suggestions: Suggestion[]; tag: string }[] = [];
+
+    for (const el of normalized) {
+      const suggestions = generateSuggestions(el, this.tokens);
+      const contrast = computeContrast(
+        getComputedStyle(el.element).color,
+        el.element,
+      );
+      if (contrast.level === 'low') {
+        suggestions.push({
+          type: 'low-contrast',
+          severity: 'warning',
+          message: 'Low color contrast',
+          detail: `${contrast.ratio}:1 — may affect readability`,
+        });
+      }
+
+      if (suggestions.length > 0) {
+        flagged.push({
+          element: el.element,
+          suggestions,
+          tag: el.element.tagName.toLowerCase(),
+        });
+      }
+    }
+
+    return flagged;
+  }
 }
