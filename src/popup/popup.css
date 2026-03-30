@@ -1,0 +1,38 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: #1a1a1a;
+  color: #e0e0e0;
+  width: 320px;
+  min-height: 200px;
+}
+
+.popup { padding: 16px; }
+
+.popup-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.popup-title { font-size: 15px; font-weight: 600; color: #ffffff; }
+.popup-subtitle { font-size: 11px; color: #666; margin-top: 2px; }
+
+.controls { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+
+.btn { background: #2563eb; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+.btn:hover { background: #1d4ed8; }
+.btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+.btn-secondary { background: #333; color: #ccc; }
+.btn-secondary:hover { background: #444; }
+.btn-danger { background: #dc2626; }
+.btn-danger:hover { background: #b91c1c; }
+
+.settings { margin-bottom: 16px; }
+.setting-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #ccc; cursor: pointer; }
+.setting-row input[type="checkbox"] { accent-color: #2563eb; }
+
+.divider { height: 1px; background: #333; margin: 12px 0; }
+
+.token-summary { background: #222; border-radius: 6px; padding: 10px; }
+.token-row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 11px; }
+.token-label { color: #888; }
+.token-value { color: #ccc; font-family: 'SF Mono', Menlo, Monaco, monospace; font-size: 11px; }
+
+.section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #666; margin-bottom: 6px; }
