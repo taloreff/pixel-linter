@@ -54,7 +54,13 @@ export class InspectionController {
   activate(): void {
     if (this.state !== 'inactive') return;
 
-    this.analyzer.scan();
+    try {
+      this.analyzer.scan();
+    } catch (err) {
+      console.error('[Pixel Linter] Analysis scan failed:', err);
+      // Continue anyway — inspection works without tokens, just no warnings
+    }
+
     this.panel.setCompact(this.settings.compactPanel);
 
     document.addEventListener('mouseover', this.handleMouseOver, true);
@@ -63,10 +69,15 @@ export class InspectionController {
     document.addEventListener('keydown', this.handleKeyDown, true);
 
     this.cleanupObserver = setupMutationObserver(() => {
-      this.analyzer.scan();
+      try {
+        this.analyzer.scan();
+      } catch (err) {
+        console.error('[Pixel Linter] Re-scan failed:', err);
+      }
     });
 
     this.state = 'hovering';
+    console.log('[Pixel Linter] Inspect mode activated');
   }
 
   deactivate(): void {
@@ -108,14 +119,18 @@ export class InspectionController {
     this.hoveredElement = target;
     this.highlight.show(target);
 
-    const data = this.analyzer.inspectElement(target);
+    try {
+      const data = this.analyzer.inspectElement(target);
 
-    if (!this.settings.showWarnings) {
-      data.warnings = [];
+      if (!this.settings.showWarnings) {
+        data.warnings = [];
+      }
+
+      const rect = target.getBoundingClientRect();
+      this.panel.show(data, rect);
+    } catch (err) {
+      console.error('[Pixel Linter] Inspect element failed:', err);
     }
-
-    const rect = target.getBoundingClientRect();
-    this.panel.show(data, rect);
   }
 
   private onMouseOut(e: MouseEvent): void {

@@ -96,7 +96,7 @@ export class PageAnalyzer {
     return {
       elementType,
       tag,
-      classes: truncateClasses(element.className || ''),
+      classes: truncateClasses(typeof element.className === 'string' ? element.className : ''),
       width: normalized.width,
       height: normalized.height,
       fontSize: normalized.fontSize,
