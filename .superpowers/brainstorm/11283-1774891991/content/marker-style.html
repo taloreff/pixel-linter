@@ -1,0 +1,58 @@
+<h2>Suggestion Marker Style</h2>
+<p class="subtitle">How should the markers look next to elements with suggestions?</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 32px; background: #f8f8f8; display: flex; align-items: center; justify-content: center; gap: 24px;">
+      <!-- Option A: Numbered circle like Figma comments -->
+      <div style="position: relative; background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 16px 24px; font-family: system-ui; font-size: 14px; width: 200px;">
+        Buy Now
+        <div style="position: absolute; top: -10px; right: -10px; width: 24px; height: 24px; border-radius: 50%; background: #f59e0b; color: white; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); cursor: pointer;">1</div>
+      </div>
+      <div style="position: relative; background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 8px 24px; font-family: system-ui; font-size: 14px; width: 200px;">
+        Small Link
+        <div style="position: absolute; top: -10px; right: -10px; width: 24px; height: 24px; border-radius: 50%; background: #f59e0b; color: white; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">2</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. Numbered Circles (Figma-style)</h3>
+      <p>Numbered amber circles on top-right corner of flagged elements. Number shows suggestion count. Feels like Figma comment pins.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 32px; background: #f8f8f8; display: flex; align-items: center; justify-content: center; gap: 24px;">
+      <!-- Option B: Dot with icon -->
+      <div style="position: relative; background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 16px 24px; font-family: system-ui; font-size: 14px; width: 200px;">
+        Buy Now
+        <div style="position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; border-radius: 50%; background: #f59e0b; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 12px;">💡</div>
+      </div>
+      <div style="position: relative; background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 8px 24px; font-family: system-ui; font-size: 14px; width: 200px;">
+        Small Link
+        <div style="position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; border-radius: 50%; background: #f59e0b; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 12px;">💡</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. Lightbulb Dots</h3>
+      <p>Small amber dots with a lightbulb icon. Friendlier feel — "here's a suggestion" rather than "here's a problem." No numbers.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 32px; background: #f8f8f8; display: flex; align-items: center; justify-content: center; gap: 24px;">
+      <!-- Option C: Minimal dot with count badge -->
+      <div style="position: relative; background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 16px 24px; font-family: system-ui; font-size: 14px; width: 200px;">
+        Buy Now
+        <div style="position: absolute; top: -6px; right: -6px; width: 14px; height: 14px; border-radius: 50%; background: #f59e0b; box-shadow: 0 1px 3px rgba(0,0,0,0.3); border: 2px solid white;"></div>
+      </div>
+      <div style="position: relative; background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 8px 24px; font-family: system-ui; font-size: 14px; width: 200px;">
+        Small Link
+        <div style="position: absolute; top: -6px; right: -6px; width: 14px; height: 14px; border-radius: 50%; background: #ef4444; box-shadow: 0 1px 3px rgba(0,0,0,0.3); border: 2px solid white;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. Minimal Dots (color-coded)</h3>
+      <p>Tiny dots — amber for info-level, red for warning-level. Most subtle, least intrusive. Hover reveals the suggestion tooltip.</p>
+    </div>
+  </div>
+</div>

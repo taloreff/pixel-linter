@@ -1,0 +1,103 @@
+<h2>Bidix — Data Flow Architecture</h2>
+<p class="subtitle">How the pieces fit together</p>
+
+<div class="mockup">
+  <div class="mockup-header">System Architecture</div>
+  <div class="mockup-body" style="font-family: monospace; font-size: 13px; line-height: 1.6; padding: 24px; background: #1a1a2e; color: #e0e0e0;">
+<pre style="margin:0; color: #e0e0e0;">
+┌─────────────────────────────────────────────────────────┐
+│                    BACKGROUND (Service Worker)           │
+│  background.ts                                           │
+│  ┌─────────────────────────────────────────────────┐     │
+│  │ • Manages per-domain enabled/disabled state      │     │
+│  │ • Responds to popup toggle messages              │     │
+│  │ • Sends enable/disable to content script         │     │
+│  │ • Updates extension icon badge                   │     │
+│  └─────────────────────────────────────────────────┘     │
+└──────────────┬──────────────────────┬───────────────────┘
+               │ chrome.runtime       │ chrome.storage
+               │ messages             │
+┌──────────────▼──────────────┐  ┌────▼─────────────────┐
+│     CONTENT SCRIPT          │  │    POPUP (React)      │
+│                             │  │    Popup.tsx          │
+│  contentScript.ts           │  │  ┌─────────────────┐  │
+│  ┌───────────────────────┐  │  │  │ Toggle ON/OFF   │  │
+│  │ 1. Init on page load  │  │  │  │ Status display  │  │
+│  │ 2. Run initial scan   │  │  │  │ Domain info     │  │
+│  │ 3. Start observer     │  │  │  └─────────────────┘  │
+│  └───────────┬───────────┘  │  └───────────────────────┘
+│              │              │
+│  ┌───────────▼───────────┐  │
+│  │   domAnalyzer.ts      │  │
+│  │                       │  │
+│  │ TreeWalker walks DOM  │  │
+│  │ Finds text nodes      │  │
+│  │ Groups by parent      │  │
+│  │ Filters skip-list     │  │
+│  └───────────┬───────────┘  │
+│              │              │
+│  ┌───────────▼───────────┐  │
+│  │ directionEngine.ts    │  │
+│  │                       │  │
+│  │ For each element:     │  │
+│  │ • Extract text        │  │
+│  │ • Find first strong   │  │
+│  │   character            │  │
+│  │ • Compare vs current  │  │
+│  │   computed direction  │  │
+│  │ • Return fix or skip  │  │
+│  └───────────┬───────────┘  │
+│              │              │
+│  ┌───────────▼───────────┐  │
+│  │ Apply fixes:          │  │
+│  │ • style.direction     │  │
+│  │ • style.textAlign     │  │
+│  │ • Mark as processed   │  │
+│  │   (data-bidix)        │  │
+│  └───────────────────────┘  │
+│                             │
+│  ┌───────────────────────┐  │
+│  │ mutationObserver.ts   │  │
+│  │                       │  │
+│  │ Watches: childList,   │  │
+│  │   characterData       │  │
+│  │ Debounced (100ms)     │  │
+│  │ Feeds new nodes →     │  │
+│  │   domAnalyzer          │  │
+│  └───────────────────────┘  │
+│                             │
+│  ┌───────────────────────┐  │
+│  │ Input handler         │  │
+│  │ (in contentScript.ts) │  │
+│  │                       │  │
+│  │ Listen: input event   │  │
+│  │ on input/textarea     │  │
+│  │ Detect first strong → │  │
+│  │ Set dir dynamically   │  │
+│  └───────────────────────┘  │
+└─────────────────────────────┘
+</pre>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 24px;">
+  <h3>Key Design Decisions</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+    <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px;">
+      <h4 style="color: #4ade80; margin: 0 0 8px;">✓ Marking processed elements</h4>
+      <p style="margin: 0; font-size: 14px;">Each fixed element gets <code>data-bidix="fixed"</code> attribute. Prevents re-processing and allows easy cleanup when toggled off.</p>
+    </div>
+    <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px;">
+      <h4 style="color: #4ade80; margin: 0 0 8px;">✓ Inline styles, not classes</h4>
+      <p style="margin: 0; font-size: 14px;">Using <code>element.style.direction</code> avoids CSS specificity battles with site stylesheets. Easy to apply and remove.</p>
+    </div>
+    <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px;">
+      <h4 style="color: #4ade80; margin: 0 0 8px;">✓ Skip list</h4>
+      <p style="margin: 0; font-size: 14px;">Skip: <code>&lt;code&gt;</code>, <code>&lt;pre&gt;</code>, <code>&lt;kbd&gt;</code>, <code>&lt;script&gt;</code>, <code>&lt;style&gt;</code>, elements with explicit <code>dir</code>, nav/button elements.</p>
+    </div>
+    <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px;">
+      <h4 style="color: #4ade80; margin: 0 0 8px;">✓ Event delegation for inputs</h4>
+      <p style="margin: 0; font-size: 14px;">Single <code>input</code> event listener on <code>document</code> using delegation. No per-element listeners needed.</p>
+    </div>
+  </div>
+</div>

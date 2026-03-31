@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateWarnings } from '../../src/content/analysis/warnings';
+import { generateSuggestions } from '../../src/content/analysis/suggestions';
 import type { DesignTokens, NormalizedElementData, SpacingQuad } from '../../src/shared/types';
 
 function makeTokens(overrides: Partial<DesignTokens> = {}): DesignTokens {
@@ -54,72 +54,72 @@ function makeNormalized(overrides: Partial<NormalizedElementData> = {}): Normali
   };
 }
 
-describe('generateWarnings', () => {
-  it('returns no warnings for on-system element', () => {
-    const warnings = generateWarnings(makeNormalized(), makeTokens());
-    expect(warnings).toEqual([]);
+describe('generateSuggestions', () => {
+  it('returns no suggestions for on-system element', () => {
+    const suggestions = generateSuggestions(makeNormalized(), makeTokens());
+    expect(suggestions).toEqual([]);
   });
 
   it('warns about uncommon font size', () => {
     const el = makeNormalized({ fontSize: 15 });
-    const warnings = generateWarnings(el, makeTokens());
-    const fontWarning = warnings.find((w) => w.type === 'uncommon-font-size');
-    expect(fontWarning).toBeDefined();
-    expect(fontWarning!.severity).toBe('warning');
-    expect(fontWarning!.message).toContain('Uncommon');
+    const suggestions = generateSuggestions(el, makeTokens());
+    const fontSuggestion = suggestions.find((w) => w.type === 'uncommon-font-size');
+    expect(fontSuggestion).toBeDefined();
+    expect(fontSuggestion!.severity).toBe('warning');
+    expect(fontSuggestion!.message).toContain('Uncommon');
   });
 
   it('warns about off-scale spacing', () => {
     const el = makeNormalized({
       paddings: { top: 13, right: 13, bottom: 13, left: 13 },
     });
-    const warnings = generateWarnings(el, makeTokens());
-    const spacingWarning = warnings.find((w) => w.type === 'off-spacing-scale');
-    expect(spacingWarning).toBeDefined();
+    const suggestions = generateSuggestions(el, makeTokens());
+    const spacingSuggestion = suggestions.find((w) => w.type === 'off-spacing-scale');
+    expect(spacingSuggestion).toBeDefined();
   });
 
   it('does not warn about spacing within tolerance', () => {
     const el = makeNormalized({
       paddings: { top: 15, right: 16, bottom: 17, left: 16 },
     });
-    const warnings = generateWarnings(el, makeTokens());
-    const spacingWarning = warnings.find((w) => w.type === 'off-spacing-scale');
-    expect(spacingWarning).toBeUndefined();
+    const suggestions = generateSuggestions(el, makeTokens());
+    const spacingSuggestion = suggestions.find((w) => w.type === 'off-spacing-scale');
+    expect(spacingSuggestion).toBeUndefined();
   });
 
   it('warns about unusual border radius', () => {
     const el = makeNormalized({ borderRadius: 7 });
-    const warnings = generateWarnings(el, makeTokens());
-    const radiusWarning = warnings.find((w) => w.type === 'unusual-radius');
-    expect(radiusWarning).toBeDefined();
-    expect(radiusWarning!.severity).toBe('info');
+    const suggestions = generateSuggestions(el, makeTokens());
+    const radiusSuggestion = suggestions.find((w) => w.type === 'unusual-radius');
+    expect(radiusSuggestion).toBeDefined();
+    expect(radiusSuggestion!.severity).toBe('info');
   });
 
   it('warns about small tap target', () => {
     const el = makeNormalized({ isInteractive: true, height: 28 });
-    const warnings = generateWarnings(el, makeTokens());
-    const tapWarning = warnings.find((w) => w.type === 'small-tap-target');
-    expect(tapWarning).toBeDefined();
+    const suggestions = generateSuggestions(el, makeTokens());
+    const tapSuggestion = suggestions.find((w) => w.type === 'small-tap-target');
+    expect(tapSuggestion).toBeDefined();
   });
 
   it('does not warn about tap target for non-interactive elements', () => {
     const el = makeNormalized({ isInteractive: false, height: 12 });
-    const warnings = generateWarnings(el, makeTokens());
-    const tapWarning = warnings.find((w) => w.type === 'small-tap-target');
-    expect(tapWarning).toBeUndefined();
+    const suggestions = generateSuggestions(el, makeTokens());
+    const tapSuggestion = suggestions.find((w) => w.type === 'small-tap-target');
+    expect(tapSuggestion).toBeUndefined();
   });
 
   it('warns about uncommon font weight', () => {
     const el = makeNormalized({ fontWeight: 500 });
-    const warnings = generateWarnings(el, makeTokens());
-    const weightWarning = warnings.find((w) => w.type === 'uncommon-font-weight');
-    expect(weightWarning).toBeDefined();
+    const suggestions = generateSuggestions(el, makeTokens());
+    const weightSuggestion = suggestions.find((w) => w.type === 'uncommon-font-weight');
+    expect(weightSuggestion).toBeDefined();
   });
 
   it('warns about mixed font family', () => {
     const el = makeNormalized({ fontFamily: 'Roboto' });
-    const warnings = generateWarnings(el, makeTokens());
-    const familyWarning = warnings.find((w) => w.type === 'mixed-font-family');
-    expect(familyWarning).toBeDefined();
+    const suggestions = generateSuggestions(el, makeTokens());
+    const familySuggestion = suggestions.find((w) => w.type === 'mixed-font-family');
+    expect(familySuggestion).toBeDefined();
   });
 });

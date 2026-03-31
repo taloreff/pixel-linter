@@ -1,0 +1,88 @@
+<h2>Suggestion Tooltip on Hover</h2>
+<p class="subtitle">When you hover a numbered marker, what should the tooltip show?</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 40px; background: #f8f8f8; display: flex; align-items: flex-start; justify-content: center;">
+      <div style="position: relative; display: inline-block;">
+        <!-- The marker -->
+        <div style="position: relative; background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 16px 32px; font-family: system-ui; font-size: 14px;">
+          Buy Now
+          <div style="position: absolute; top: -10px; right: -10px; width: 24px; height: 24px; border-radius: 50%; background: #f59e0b; color: white; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">2</div>
+        </div>
+        <!-- Compact tooltip -->
+        <div style="position: absolute; top: -10px; right: 24px; background: rgba(15,15,15,0.95); color: #e0e0e0; border-radius: 8px; padding: 10px 14px; font-family: system-ui; font-size: 12px; width: 260px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); line-height: 1.5;">
+          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+            <span style="font-size: 12px;">⚠️</span>
+            <span style="color: #fbbf24; font-weight: 500;">Spacing not aligned to page scale</span>
+          </div>
+          <div style="color: #888; font-size: 11px; font-family: 'SF Mono', monospace; margin-bottom: 8px;">13px — page scale: 8px, 16px, 24px</div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 12px;">💡</span>
+            <span style="color: #60a5fa; font-weight: 500;">Uncommon font weight</span>
+          </div>
+          <div style="color: #888; font-size: 11px; font-family: 'SF Mono', monospace;">500 — common: 400, 700</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. Compact List (Recommended)</h3>
+      <p>Shows all suggestions in a compact dark tooltip — same visual language as the main panel. Each suggestion has an icon, message, and detail line. Appears on hover, disappears on mouseout.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 40px; background: #f8f8f8; display: flex; align-items: flex-start; justify-content: center;">
+      <div style="position: relative; display: inline-block;">
+        <!-- The marker -->
+        <div style="position: relative; background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 16px 32px; font-family: system-ui; font-size: 14px;">
+          Buy Now
+          <div style="position: absolute; top: -10px; right: -10px; width: 24px; height: 24px; border-radius: 50%; background: #f59e0b; color: white; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">2</div>
+        </div>
+        <!-- Single line tooltip -->
+        <div style="position: absolute; top: -10px; right: 24px; background: rgba(15,15,15,0.95); color: #e0e0e0; border-radius: 6px; padding: 6px 12px; font-family: system-ui; font-size: 11px; width: 220px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); white-space: nowrap;">
+          <span style="color: #fbbf24;">⚠️ 2 suggestions</span>
+          <span style="color: #888;"> — click to inspect</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. Minimal Hint</h3>
+      <p>Just shows count and "click to inspect" — clicking the marker opens the full inspection panel locked on that element. Less information upfront but very clean.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 40px; background: #f8f8f8; display: flex; align-items: flex-start; justify-content: center;">
+      <div style="position: relative; display: inline-block;">
+        <!-- The marker -->
+        <div style="position: relative; background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 16px 32px; font-family: system-ui; font-size: 14px;">
+          Buy Now
+          <div style="position: absolute; top: -10px; right: -10px; width: 24px; height: 24px; border-radius: 50%; background: #f59e0b; color: white; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">2</div>
+        </div>
+        <!-- Expanded card tooltip -->
+        <div style="position: absolute; top: -10px; right: 24px; background: rgba(15,15,15,0.95); color: #e0e0e0; border-radius: 8px; padding: 12px 14px; font-family: system-ui; font-size: 12px; width: 280px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); line-height: 1.5;">
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-bottom: 8px; font-weight: 600;">2 Suggestions for &lt;button&gt;</div>
+          <div style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 8px 10px; margin-bottom: 6px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="color: #fbbf24; font-size: 12px;">⚠️</span>
+              <span style="font-weight: 500;">Off-scale spacing</span>
+            </div>
+            <div style="color: #888; font-size: 11px; margin-top: 2px;">13px padding — try 8px or 16px</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 8px 10px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="color: #60a5fa; font-size: 12px;">💡</span>
+              <span style="font-weight: 500;">Uncommon font weight</span>
+            </div>
+            <div style="color: #888; font-size: 11px; margin-top: 2px;">500 — most elements use 400 or 700</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. Card Tooltip with Context</h3>
+      <p>Each suggestion in its own card within the tooltip. Includes element context ("2 Suggestions for &lt;button&gt;") and friendlier language ("try 8px or 16px"). Most informative.</p>
+    </div>
+  </div>
+</div>

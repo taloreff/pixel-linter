@@ -189,44 +189,44 @@ const PANEL_STYLES = `
     color: #f87171;
   }
 
-  .warnings-list {
+  .suggestions-list {
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
 
-  .warning-item {
+  .suggestion-item {
     display: flex;
     align-items: flex-start;
     gap: 5px;
   }
 
-  .warning-icon {
+  .suggestion-icon {
     flex-shrink: 0;
     font-size: 11px;
     line-height: 1.4;
   }
 
-  .warning-icon.severity-warning {
+  .suggestion-icon.severity-warning {
     color: #facc15;
   }
 
-  .warning-icon.severity-info {
+  .suggestion-icon.severity-info {
     color: #60a5fa;
   }
 
-  .warning-text {
+  .suggestion-text {
     display: flex;
     flex-direction: column;
     gap: 1px;
   }
 
-  .warning-message {
+  .suggestion-message {
     color: #e8e8e8;
     font-size: 11px;
   }
 
-  .warning-detail {
+  .suggestion-detail {
     color: #888;
     font-size: 10px;
   }
@@ -416,20 +416,20 @@ export class PanelRenderer {
       );
     }
 
-    // Warnings
-    if (data.warnings.length > 0) {
-      const warningItems = data.warnings
+    // Suggestions
+    if (data.suggestions.length > 0) {
+      const suggestionItems = data.suggestions
         .map(w => {
           const iconClass = w.severity === 'warning' ? 'severity-warning' : 'severity-info';
           const icon = w.severity === 'warning' ? '⚠' : 'ℹ';
           const detail = w.detail
-            ? `<span class="warning-detail">${this.escapeHtml(w.detail)}</span>`
+            ? `<span class="suggestion-detail">${this.escapeHtml(w.detail)}</span>`
             : '';
           return (
-            `<div class="warning-item">` +
-              `<span class="warning-icon ${iconClass}">${icon}</span>` +
-              `<div class="warning-text">` +
-                `<span class="warning-message">${this.escapeHtml(w.message)}</span>` +
+            `<div class="suggestion-item">` +
+              `<span class="suggestion-icon ${iconClass}">${icon}</span>` +
+              `<div class="suggestion-text">` +
+                `<span class="suggestion-message">${this.escapeHtml(w.message)}</span>` +
                 detail +
               `</div>` +
             `</div>`
@@ -437,8 +437,8 @@ export class PanelRenderer {
         })
         .join('');
       sections.push(
-        `<div class="section"><div class="section-title">Warnings</div>` +
-          `<div class="warnings-list">${warningItems}</div></div>`,
+        `<div class="section"><div class="section-title">Suggestions</div>` +
+          `<div class="suggestions-list">${suggestionItems}</div></div>`,
       );
     }
 

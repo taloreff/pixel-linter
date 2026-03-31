@@ -2,7 +2,7 @@ export type ElementType =
   | 'heading' | 'paragraph' | 'button' | 'link' | 'input'
   | 'textarea' | 'image' | 'icon' | 'card' | 'nav-item' | 'generic';
 
-export type WarningType =
+export type SuggestionType =
   | 'uncommon-font-size' | 'off-spacing-scale' | 'unusual-radius'
   | 'low-contrast' | 'small-tap-target' | 'uncommon-font-weight'
   | 'mixed-font-family';
@@ -77,15 +77,15 @@ export interface FrequencyMaps {
   componentHeights: Map<number, number>;
 }
 
-export interface Warning {
-  type: WarningType;
+export interface Suggestion {
+  type: SuggestionType;
   severity: 'info' | 'warning';
   message: string;
   detail?: string;
 }
 
 export interface StoredSettings {
-  showWarnings: boolean;
+  showSuggestions: boolean;
   compactPanel: boolean;
   enabledSites: string[];
 }
@@ -117,5 +117,5 @@ export interface InspectionData {
   boxShadow: string;
   display: string;
   position: string;
-  warnings: Warning[];
+  suggestions: Suggestion[];
 }

@@ -37,9 +37,9 @@ describe('storage', () => {
     });
 
     it('merges stored values with defaults', async () => {
-      mockStorage['pixelLinterSettings'] = { showWarnings: false };
+      mockStorage['pixelLinterSettings'] = { showSuggestions: false };
       const settings = await getSettings();
-      expect(settings.showWarnings).toBe(false);
+      expect(settings.showSuggestions).toBe(false);
       expect(settings.compactPanel).toBe(false);
       expect(settings.enabledSites).toEqual([]);
     });

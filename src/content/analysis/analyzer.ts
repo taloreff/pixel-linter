@@ -1,9 +1,9 @@
-import type { DesignTokens, NormalizedElementData, Warning, InspectionData } from '@shared/types';
+import type { DesignTokens, NormalizedElementData, Suggestion, InspectionData } from '@shared/types';
 import { collectVisibleElements } from './collector';
 import { normalizeAll, normalizeElement, parsePx, normalizeColor, normalizeFontFamily, resolveLineHeight } from './normalizer';
 import { buildFrequencyMaps } from './histogram';
 import { inferDesignTokens } from './tokenInferrer';
-import { generateWarnings } from './warnings';
+import { generateSuggestions } from './suggestions';
 import { computeContrast } from './contrast';
 import { classifyElement } from './elementClassifier';
 import { isInteractive, hasTextContent } from '../utils/dom';
@@ -78,14 +78,14 @@ export class PageAnalyzer {
       isInteractive: interactive,
     };
 
-    const warnings: Warning[] = this.tokens
-      ? generateWarnings(normalized, this.tokens)
+    const suggestions: Suggestion[] = this.tokens
+      ? generateSuggestions(normalized, this.tokens)
       : [];
 
     const contrast = computeContrast(computed.color, element);
 
     if (contrast.level === 'low') {
-      warnings.push({
+      suggestions.push({
         type: 'low-contrast',
         severity: 'warning',
         message: 'Low color contrast',
@@ -120,7 +120,41 @@ export class PageAnalyzer {
       boxShadow: computed.boxShadow === 'none' ? '' : computed.boxShadow,
       display: normalized.display,
       position: normalized.position,
-      warnings,
+      suggestions,
     };
+  }
+
+  getFlaggedElements(): { element: Element; suggestions: Suggestion[]; tag: string }[] {
+    if (!this.tokens) return [];
+
+    const raw = collectVisibleElements();
+    const normalized = normalizeAll(raw);
+    const flagged: { element: Element; suggestions: Suggestion[]; tag: string }[] = [];
+
+    for (const el of normalized) {
+      const suggestions = generateSuggestions(el, this.tokens);
+      const contrast = computeContrast(
+        getComputedStyle(el.element).color,
+        el.element,
+      );
+      if (contrast.level === 'low') {
+        suggestions.push({
+          type: 'low-contrast',
+          severity: 'warning',
+          message: 'Low color contrast',
+          detail: `${contrast.ratio}:1 — may affect readability`,
+        });
+      }
+
+      if (suggestions.length > 0) {
+        flagged.push({
+          element: el.element,
+          suggestions,
+          tag: el.element.tagName.toLowerCase(),
+        });
+      }
+    }
+
+    return flagged;
   }
 }

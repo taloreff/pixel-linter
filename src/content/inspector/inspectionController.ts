@@ -4,6 +4,7 @@ import { HighlightManager } from './highlightManager';
 import { PanelRenderer } from './panelRenderer';
 import { resolveTarget } from './targetResolver';
 import { setupMutationObserver } from '../observer';
+import { SuggestionMarkerManager } from './suggestionMarkerManager';
 
 type InspectionState = 'inactive' | 'hovering' | 'locked';
 
@@ -12,6 +13,7 @@ export class InspectionController {
   private analyzer: PageAnalyzer;
   private highlight: HighlightManager;
   private panel: PanelRenderer;
+  private markerManager: SuggestionMarkerManager;
   private lockedElement: Element | null = null;
   private hoveredElement: Element | null = null;
   private cleanupObserver: (() => void) | null = null;
@@ -26,6 +28,10 @@ export class InspectionController {
     this.analyzer = new PageAnalyzer();
     this.highlight = new HighlightManager();
     this.panel = new PanelRenderer();
+    this.markerManager = new SuggestionMarkerManager();
+    this.markerManager.onElementClick((element) => {
+      this.lockOnElement(element);
+    });
     this.settings = settings;
 
     this.handleMouseOver = this.onMouseOver.bind(this);
@@ -71,6 +77,7 @@ export class InspectionController {
     this.cleanupObserver = setupMutationObserver(() => {
       try {
         this.analyzer.scan();
+        this.showMarkers();
       } catch (err) {
         console.error('[Pixel Linter] Re-scan failed:', err);
       }
@@ -78,6 +85,7 @@ export class InspectionController {
 
     this.state = 'hovering';
     console.log('[Pixel Linter] Inspect mode activated');
+    this.showMarkers();
   }
 
   deactivate(): void {
@@ -94,6 +102,8 @@ export class InspectionController {
     this.highlight.hide();
     this.panel.hide();
 
+    this.markerManager.hide();
+
     this.lockedElement = null;
     this.hoveredElement = null;
     this.state = 'inactive';
@@ -101,12 +111,43 @@ export class InspectionController {
 
   refreshAnalysis(): void {
     this.analyzer.scan();
+    this.showMarkers();
   }
 
   destroy(): void {
     this.deactivate();
     this.highlight.destroy();
     this.panel.destroy();
+    this.markerManager.destroy();
+  }
+
+  private lockOnElement(element: Element): void {
+    this.hoveredElement = element;
+    this.highlight.show(element);
+
+    try {
+      const data = this.analyzer.inspectElement(element);
+      if (!this.settings.showSuggestions) {
+        data.suggestions = [];
+      }
+      const rect = element.getBoundingClientRect();
+      this.panel.show(data, rect);
+    } catch (err) {
+      console.error('[Pixel Linter] Inspect element failed:', err);
+    }
+
+    this.state = 'locked';
+    this.lockedElement = element;
+  }
+
+  private showMarkers(): void {
+    if (!this.settings.showSuggestions) return;
+    try {
+      const flagged = this.analyzer.getFlaggedElements();
+      this.markerManager.show(flagged);
+    } catch (err) {
+      console.error('[Pixel Linter] Failed to show markers:', err);
+    }
   }
 
   private onMouseOver(e: MouseEvent): void {
@@ -122,8 +163,8 @@ export class InspectionController {
     try {
       const data = this.analyzer.inspectElement(target);
 
-      if (!this.settings.showWarnings) {
-        data.warnings = [];
+      if (!this.settings.showSuggestions) {
+        data.suggestions = [];
       }
 
       const rect = target.getBoundingClientRect();

@@ -1,0 +1,89 @@
+<h2>Feasibility Reality Check</h2>
+<p class="subtitle">Honest difficulty assessment for each approach</p>
+
+<div class="section">
+  <h3>PDF ↔ DOCX Conversion + RTL Fix</h3>
+  <div style="background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+      <span style="font-size: 24px;">🔴</span>
+      <span style="font-size: 18px; font-weight: 700; color: #f87171;">Extremely Difficult</span>
+    </div>
+    <p style="color: #ccc; margin: 0 0 12px;">This is what companies like Adobe, Smallpdf, and iLovePDF have entire engineering teams building. Here's why:</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <div style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">
+        <h4 style="color: #f87171; margin: 0 0 6px; font-size: 13px;">PDF → DOCX</h4>
+        <ul style="margin: 0; padding-left: 16px; font-size: 12px; color: #aaa;">
+          <li>PDF is a <em>visual</em> format — text is placed by X/Y coordinates, not flow</li>
+          <li>No concept of "paragraphs" or "columns" — just painted characters</li>
+          <li>Fonts may be embedded/subsetted and not available in DOCX</li>
+          <li>Tables, lists, headers — all lost in PDF, must be reverse-engineered</li>
+          <li>Would need massive libraries or external API calls</li>
+        </ul>
+      </div>
+      <div style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">
+        <h4 style="color: #f87171; margin: 0 0 6px; font-size: 13px;">Style Preservation</h4>
+        <ul style="margin: 0; padding-left: 16px; font-size: 12px; color: #aaa;">
+          <li>PDF styles ≠ DOCX styles (fundamentally different models)</li>
+          <li>Complex layouts (multi-column CVs) break during conversion</li>
+          <li>Even Google Docs and LibreOffice mess this up regularly</li>
+          <li>Doing this in a Chrome extension? Not realistic.</li>
+        </ul>
+      </div>
+    </div>
+    <p style="color: #888; font-size: 12px; margin: 12px 0 0; font-style: italic;">Verdict: This is a multi-year, multi-engineer product. Not a side project or extension.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h3>What IS Feasible (and still solves your problem)</h3>
+
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div style="background: rgba(74, 222, 128, 0.08); border: 1px solid rgba(74, 222, 128, 0.2); border-radius: 10px; padding: 20px;">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <span style="font-size: 20px;">🟢</span>
+        <span style="font-size: 16px; font-weight: 700; color: #4ade80;">Option A: Smart Web RTL Fixer + PDF from Fixed DOM</span>
+        <span style="font-size: 11px; background: rgba(74, 222, 128, 0.2); padding: 2px 8px; border-radius: 10px; color: #4ade80;">Our Hybrid Plan</span>
+      </div>
+      <p style="color: #aaa; font-size: 13px; margin: 0 0 8px;">Fix bidi on the web page → generate clean PDF from the fixed page. This works for LinkedIn CVs because we fix the DOM THEN export it.</p>
+      <div style="display: flex; gap: 16px;">
+        <span style="color: #4ade80; font-size: 12px;">✓ 2-3 weeks to build</span>
+        <span style="color: #4ade80; font-size: 12px;">✓ All client-side</span>
+        <span style="color: #4ade80; font-size: 12px;">✓ No external APIs</span>
+      </div>
+    </div>
+
+    <div style="background: rgba(250, 204, 21, 0.08); border: 1px solid rgba(250, 204, 21, 0.2); border-radius: 10px; padding: 20px;">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <span style="font-size: 20px;">🟡</span>
+        <span style="font-size: 16px; font-weight: 700; color: #facc15;">Option B: DOCX RTL Fixer (no PDF conversion)</span>
+      </div>
+      <p style="color: #aaa; font-size: 13px; margin: 0 0 8px;">If the user already HAS a DOCX file, fix the RTL direction inside it. DOCX is XML-based, so we CAN manipulate direction properties programmatically. Skip PDF entirely.</p>
+      <p style="color: #888; font-size: 12px; margin: 0 0 8px;">Workflow: Upload DOCX → fix all text direction to RTL → fix alignment → download fixed DOCX</p>
+      <div style="display: flex; gap: 16px;">
+        <span style="color: #facc15; font-size: 12px;">✓ Moderate difficulty</span>
+        <span style="color: #facc15; font-size: 12px;">✓ docx.js library exists</span>
+        <span style="color: #facc15; font-size: 12px;">⚠ Only works if user has DOCX source</span>
+      </div>
+    </div>
+
+    <div style="background: rgba(250, 204, 21, 0.08); border: 1px solid rgba(250, 204, 21, 0.2); border-radius: 10px; padding: 20px;">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <span style="font-size: 20px;">🟡</span>
+        <span style="font-size: 16px; font-weight: 700; color: #facc15;">Option C: Both A + B</span>
+      </div>
+      <p style="color: #aaa; font-size: 13px; margin: 0 0 8px;">Chrome extension for web RTL + PDF export from DOM. <strong>Plus</strong> a simple DOCX RTL fixer tool (could be a tab in the popup or a small web app). Covers both workflows.</p>
+      <div style="display: flex; gap: 16px;">
+        <span style="color: #facc15; font-size: 12px;">⚠ Larger scope but all feasible</span>
+        <span style="color: #facc15; font-size: 12px;">✓ MVP the extension first, add DOCX later</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 20px;">
+  <h3>Your CV Workflow: What Actually Works</h3>
+  <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; font-size: 13px; color: #aaa;">
+    <p style="margin: 0 0 8px;"><strong style="color: #fff;">English CV → Hebrew CV (keeping style):</strong></p>
+    <p style="margin: 0;">The honest answer: you need to edit it in a tool that understands document structure (Word, Google Docs, Canva, Overleaf). No extension can reliably convert an English PDF layout to Hebrew while keeping styling. BUT — Bidix can ensure that once you build your Hebrew CV on a web platform (LinkedIn, etc.), the web view AND the exported PDF both render correctly.</p>
+  </div>
+</div>

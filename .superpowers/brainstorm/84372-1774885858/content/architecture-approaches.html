@@ -1,0 +1,61 @@
+<h2>Architecture Approach</h2>
+<p class="subtitle">How should Bidix scan and fix elements?</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>TreeWalker Scanner (Recommended)</h3>
+      <p>Use <code>document.createTreeWalker()</code> to efficiently walk text nodes. Group by parent element, detect direction per element, apply fixes. MutationObserver watches for new nodes and feeds them back through the same pipeline.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>Native browser API — very fast</li>
+          <li>Skips non-text nodes automatically</li>
+          <li>Minimal memory allocation</li>
+          <li>Natural fit with MutationObserver</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>Slightly more complex initial setup</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>querySelectorAll Scanner</h3>
+      <p>Select all text-containing elements via CSS selectors (<code>p, span, div, h1-h6, li, td, input, textarea</code>). Check each element's <code>textContent</code>, detect direction, apply fixes.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>Simple and familiar API</li>
+          <li>Easy to define element scope</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>Selects elements without text too</li>
+          <li>Can miss dynamically added elements</li>
+          <li>Harder to avoid double-processing</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Intersection Observer + Lazy Scan</h3>
+      <p>Only scan elements as they enter the viewport. Combines IntersectionObserver for visibility with TreeWalker for text analysis. Fixes only visible content.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>Best performance on large pages</li>
+          <li>Zero work for off-screen content</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>Visible flash when scrolling to unfixed content</li>
+          <li>More complex lifecycle management</li>
+          <li>Edge cases with fixed/sticky elements</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div>
