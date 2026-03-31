@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel Linter - Screenshot Mockup</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #f8fafc;
+    overflow: hidden;
+  }
+
+  /* Fake website */
+  .fake-site {
+    padding: 32px 48px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .fake-nav {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 16px 0;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 40px;
+  }
+  .fake-logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+  }
+  .fake-nav-links {
+    display: flex;
+    gap: 24px;
+  }
+  .fake-nav-links a {
+    color: #475569;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .fake-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .fake-hero h1 {
+    font-size: 48px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+  .fake-hero p {
+    font-size: 18px;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+  .fake-btn {
+    display: inline-block;
+    background: #2563eb;
+    color: white;
+    padding: 14px 32px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-right: 12px;
+  }
+  .fake-btn-outline {
+    background: transparent;
+    border: 2px solid #cbd5e1;
+    color: #334155;
+  }
+  .fake-image {
+    background: linear-gradient(135deg, #dbeafe, #e0e7ff);
+    border-radius: 16px;
+    height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6366f1;
+    font-size: 64px;
+  }
+  .fake-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+  }
+  .fake-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .fake-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 8px;
+  }
+  .fake-card p {
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.5;
+  }
+
+  /* Highlight overlay on the button */
+  .highlight-overlay {
+    position: absolute;
+    background: rgba(59, 130, 246, 0.12);
+    outline: 2px solid rgba(59, 130, 246, 0.7);
+    border-radius: 10px;
+    pointer-events: none;
+  }
+
+  /* Suggestion marker */
+  .marker {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #EAB308;
+    color: white;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 100;
+  }
+  .marker.critical {
+    background: #EF4444;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  /* Pixel Linter panel */
+  .pl-panel {
+    position: absolute;
+    background: rgba(15, 15, 15, 0.96);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3);
+    color: #e8e8e8;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 11px;
+    line-height: 1.4;
+    width: 300px;
+    overflow: hidden;
+    z-index: 200;
+  }
+  .pl-section {
+    padding: 7px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .pl-section:last-child { border-bottom: none; }
+  .pl-section-title {
+    color: #888;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .pl-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 3px;
+  }
+  .pl-label { color: #888; font-size: 10px; }
+  .pl-value {
+    color: #e8e8e8;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    text-align: right;
+  }
+  .pl-header {
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .pl-header-top {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pl-badge {
+    background: rgba(59,130,246,0.25);
+    border: 1px solid rgba(59,130,246,0.4);
+    border-radius: 3px;
+    color: #7fb3f5;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 1px 5px;
+    text-transform: uppercase;
+  }
+  .pl-tag {
+    color: #e8e8e8;
+    font-family: 'SF Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pl-dims {
+    color: #666;
+    font-family: 'SF Mono', monospace;
+    font-size: 10px;
+    margin-left: auto;
+  }
+  .pl-classes {
+    color: #aaa;
+    font-family: 'SF Mono', monospace;
+    font-size: 10px;
+    margin-top: 4px;
+    word-break: break-all;
+  }
+  .pl-swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    border: 1px solid rgba(255,255,255,0.2);
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+  .pl-contrast {
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 1px 4px;
+    background: rgba(34,197,94,0.2);
+    border: 1px solid rgba(34,197,94,0.4);
+    color: #4ade80;
+  }
+  .pl-suggestion-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    margin-bottom: 4px;
+  }
+  .pl-suggestion-icon { font-size: 11px; flex-shrink: 0; }
+  .pl-suggestion-msg { font-size: 11px; color: #e8e8e8; }
+  .pl-suggestion-detail { font-size: 10px; color: #888; }
+</style>
+</head>
+<body>
+  <div class="fake-site">
+    <div class="fake-nav">
+      <div class="fake-logo">Acme Inc</div>
+      <div class="fake-nav-links">
+        <a href="#">Products</a>
+        <a href="#">Solutions</a>
+        <a href="#">Pricing</a>
+        <a href="#">About</a>
+      </div>
+    </div>
+    <div class="fake-hero">
+      <div>
+        <h1>Build better products faster</h1>
+        <p>The all-in-one platform for modern teams to ship quality software with confidence.</p>
+        <div style="position: relative; display: inline-block;">
+          <a class="fake-btn" id="target-btn" href="#">Get Started</a>
+          <a class="fake-btn fake-btn-outline" href="#">Learn More</a>
+        </div>
+      </div>
+      <div class="fake-image">📊</div>
+    </div>
+    <div class="fake-cards">
+      <div class="fake-card">
+        <h3>Analytics</h3>
+        <p>Track every metric that matters to your team with real-time dashboards.</p>
+      </div>
+      <div class="fake-card" style="position:relative;">
+        <h3 style="font-size: 15px;">Integrations</h3>
+        <p>Connect with 200+ tools your team already uses every day.</p>
+        <div class="marker" style="top: -10px; right: -10px;">💡</div>
+      </div>
+      <div class="fake-card">
+        <h3>Security</h3>
+        <p>Enterprise-grade security with SOC 2 compliance built in.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Highlight overlay on Get Started button -->
+  <div class="highlight-overlay" style="top: 230px; left: 48px; width: 152px; height: 48px;"></div>
+
+  <!-- Suggestion marker on Get Started button -->
+  <div class="marker" style="top: 220px; left: 190px;">💡</div>
+
+  <!-- Suggestion marker (critical) on hero image area -->
+  <div class="marker critical" style="top: 142px; right: 60px;">!</div>
+
+  <!-- Panel for Get Started button -->
+  <div class="pl-panel" style="top: 285px; left: 56px;">
+    <div class="pl-header">
+      <div class="pl-header-top">
+        <span class="pl-badge">Button</span>
+        <span class="pl-tag">&lt;a&gt;</span>
+        <span class="pl-dims">152×48</span>
+      </div>
+      <div class="pl-classes">.fake-btn</div>
+    </div>
+    <div class="pl-section">
+      <div class="pl-section-title">Typography</div>
+      <div class="pl-row"><span class="pl-label">Font</span><span class="pl-value">system-ui</span></div>
+      <div class="pl-row"><span class="pl-label">Size</span><span class="pl-value">16px</span></div>
+      <div class="pl-row"><span class="pl-label">Weight</span><span class="pl-value">600</span></div>
+    </div>
+    <div class="pl-section">
+      <div class="pl-section-title">Colors</div>
+      <div class="pl-row"><span class="pl-label">Text</span><span class="pl-value"><span class="pl-swatch" style="background:#fff"></span>#FFFFFF</span></div>
+      <div class="pl-row"><span class="pl-label">Background</span><span class="pl-value"><span class="pl-swatch" style="background:#2563eb"></span>#2563EB</span></div>
+      <div class="pl-row"><span class="pl-label">Contrast</span><span class="pl-value"><span class="pl-contrast">8.6:1</span></span></div>
+    </div>
+    <div class="pl-section">
+      <div class="pl-section-title">Spacing</div>
+      <div class="pl-row"><span class="pl-label">Padding</span><span class="pl-value">14px 32px</span></div>
+    </div>
+    <div class="pl-section">
+      <div class="pl-section-title">Suggestions</div>
+      <div class="pl-suggestion-item">
+        <span class="pl-suggestion-icon" style="color:#facc15;">⚠</span>
+        <div>
+          <div class="pl-suggestion-msg">Spacing not aligned to page scale</div>
+          <div class="pl-suggestion-detail">14px — page scale: 8px, 16px, 24px, 32px</div>
+        </div>
+      </div>
+      <div class="pl-suggestion-item">
+        <span class="pl-suggestion-icon" style="color:#60a5fa;">ℹ</span>
+        <div>
+          <div class="pl-suggestion-msg">Uncommon font weight on this page</div>
+          <div class="pl-suggestion-detail">600 — common: 400, 700</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
