@@ -100,6 +100,10 @@ npm run test:watch    # Watch mode
 - Vitest
 - ESLint + Prettier
 
+## Privacy
+
+Pixel Linter runs entirely in your browser. It does **not** collect, transmit, or store any personal data. All analysis happens locally on the page you're inspecting. The only data persisted is your preferences (show suggestions toggle, compact mode, enabled sites list), stored locally via `chrome.storage.local`. No analytics, no tracking, no external requests.
+
 ## Roadmap Ideas
 
 - Figma integration for true design-system comparison

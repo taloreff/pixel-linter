@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel Linter - Popup Mockup</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #e2e8f0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px;
+  }
+
+  .browser-chrome {
+    background: #1e293b;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+    width: 1200px;
+  }
+  .browser-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #334155;
+  }
+  .browser-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .browser-dots span {
+    width: 12px; height: 12px; border-radius: 50%;
+  }
+  .browser-dots span:nth-child(1) { background: #ef4444; }
+  .browser-dots span:nth-child(2) { background: #eab308; }
+  .browser-dots span:nth-child(3) { background: #22c55e; }
+  .browser-url {
+    background: #1e293b;
+    border-radius: 6px;
+    padding: 6px 16px;
+    color: #94a3b8;
+    font-size: 13px;
+    flex: 1;
+  }
+  .browser-extensions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .ext-icon {
+    width: 28px; height: 28px; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; cursor: pointer;
+  }
+  .ext-icon.pixel-linter {
+    background: #2563eb;
+    color: white;
+    font-weight: 700;
+    font-size: 11px;
+    border-radius: 6px;
+    position: relative;
+  }
+  .ext-badge {
+    position: absolute;
+    top: -4px; right: -4px;
+    background: #10b981;
+    color: white;
+    font-size: 7px;
+    padding: 1px 3px;
+    border-radius: 3px;
+    font-weight: 700;
+  }
+
+  .browser-body {
+    position: relative;
+    min-height: 600px;
+    background: #f8fafc;
+  }
+
+  /* Fake website content */
+  .site-content {
+    padding: 32px 40px;
+  }
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 36px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .site-logo { font-size: 20px; font-weight: 700; color: #0f172a; }
+  .site-nav a { color: #475569; text-decoration: none; font-size: 14px; }
+  .site-hero h1 { font-size: 36px; font-weight: 700; color: #0f172a; margin-bottom: 12px; }
+  .site-hero p { font-size: 16px; color: #64748b; margin-bottom: 24px; max-width: 500px; line-height: 1.5; }
+  .site-btn {
+    display: inline-block;
+    background: #2563eb; color: white; padding: 12px 28px;
+    border-radius: 8px; font-size: 15px; font-weight: 600; text-decoration: none;
+  }
+
+  /* Markers on the page */
+  .marker {
+    position: absolute; width: 24px; height: 24px; border-radius: 50%;
+    background: #EAB308; color: white; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 50;
+  }
+
+  /* Popup dropdown */
+  .popup-overlay {
+    position: absolute;
+    top: 0; right: 60px;
+    z-index: 100;
+  }
+  .popup {
+    background: #1a1a1a;
+    border-radius: 8px;
+    width: 320px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .popup-inner { padding: 16px; }
+  .popup-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .popup-title { font-size: 15px; font-weight: 600; color: #fff; }
+  .popup-subtitle { font-size: 11px; color: #666; margin-top: 2px; }
+  .popup-status {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .popup-status-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: #10b981;
+  }
+  .popup-status-text { font-size: 12px; color: #888; }
+
+  .popup-controls { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  .popup-btn {
+    padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 500;
+    border: none; cursor: pointer; text-align: center;
+  }
+  .popup-btn-danger { background: #dc2626; color: white; }
+  .popup-btn-secondary { background: #333; color: #ccc; }
+
+  .popup-divider { height: 1px; background: #333; margin: 12px 0; }
+  .popup-section-label {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.5px; color: #666; margin-bottom: 6px;
+  }
+  .popup-setting {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 0; font-size: 13px; color: #ccc;
+  }
+  .popup-toggle {
+    width: 36px; height: 20px; background: #2563eb; border-radius: 10px;
+    position: relative;
+  }
+  .popup-toggle::after {
+    content: '';
+    position: absolute; top: 2px; right: 2px;
+    width: 16px; height: 16px; border-radius: 50%; background: white;
+  }
+  .popup-toggle.off { background: #555; }
+  .popup-toggle.off::after { right: auto; left: 2px; }
+
+  .token-summary {
+    background: #222; border-radius: 6px; padding: 10px;
+  }
+  .token-row {
+    display: flex; justify-content: space-between; padding: 3px 0; font-size: 11px;
+  }
+  .token-label { color: #888; }
+  .token-value { color: #ccc; font-family: 'SF Mono', Menlo, monospace; font-size: 11px; }
+</style>
+</head>
+<body>
+  <div class="browser-chrome">
+    <div class="browser-toolbar">
+      <div class="browser-dots"><span></span><span></span><span></span></div>
+      <div class="browser-url">acme-inc.com/products</div>
+      <div class="browser-extensions">
+        <div class="ext-icon" style="color: #94a3b8;">🧩</div>
+        <div class="ext-icon pixel-linter">P<span class="ext-badge">ON</span></div>
+      </div>
+    </div>
+    <div class="browser-body">
+      <div class="site-content">
+        <div class="site-nav">
+          <div class="site-logo">Acme Inc</div>
+          <a href="#">Products</a>
+          <a href="#">Solutions</a>
+          <a href="#">Pricing</a>
+        </div>
+        <div class="site-hero">
+          <h1>Build better products faster</h1>
+          <p>The all-in-one platform for modern teams to ship quality software with confidence.</p>
+          <a class="site-btn" href="#">Get Started</a>
+        </div>
+      </div>
+
+      <!-- Markers scattered on the page -->
+      <div class="marker" style="top: 108px; left: 260px;">💡</div>
+      <div class="marker" style="top: 248px; left: 520px;">💡</div>
+
+      <!-- Popup dropdown -->
+      <div class="popup-overlay">
+        <div class="popup">
+          <div class="popup-inner">
+            <div class="popup-header">
+              <div>
+                <div class="popup-title">Pixel Linter</div>
+                <div class="popup-subtitle">Visual QA assistant</div>
+              </div>
+              <div class="popup-status">
+                <div class="popup-status-dot"></div>
+                <div class="popup-status-text">Ready</div>
+              </div>
+            </div>
+
+            <div class="popup-controls">
+              <div class="popup-btn popup-btn-danger">Exit Inspect Mode</div>
+              <div class="popup-btn popup-btn-secondary">Refresh Analysis</div>
+            </div>
+
+            <div class="popup-divider"></div>
+            <div class="popup-section-label">Settings</div>
+            <div class="popup-setting">
+              <span>Show suggestions</span>
+              <div class="popup-toggle"></div>
+            </div>
+            <div class="popup-setting">
+              <span>Compact panel</span>
+              <div class="popup-toggle off"></div>
+            </div>
+
+            <div class="popup-divider"></div>
+            <div class="popup-section-label">Detected Tokens</div>
+            <div class="token-summary">
+              <div class="token-row"><span class="token-label">Font</span><span class="token-value">system-ui</span></div>
+              <div class="token-row"><span class="token-label">Sizes</span><span class="token-value">16px, 14px, 24px</span></div>
+              <div class="token-row"><span class="token-label">Spacing</span><span class="token-value">8, 16, 24, 32</span></div>
+              <div class="token-row"><span class="token-label">Radii</span><span class="token-value">8px, 12px</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

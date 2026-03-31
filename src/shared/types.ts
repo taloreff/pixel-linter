@@ -5,7 +5,8 @@ export type ElementType =
 export type SuggestionType =
   | 'uncommon-font-size' | 'off-spacing-scale' | 'unusual-radius'
   | 'low-contrast' | 'small-tap-target' | 'uncommon-font-weight'
-  | 'mixed-font-family';
+  | 'mixed-font-family'
+  | 'horizontal-overflow' | 'viewport-overflow' | 'text-clipped' | 'sibling-overlap';
 
 export interface TokenFrequency<T> {
   value: T;
@@ -79,7 +80,7 @@ export interface FrequencyMaps {
 
 export interface Suggestion {
   type: SuggestionType;
-  severity: 'info' | 'warning';
+  severity: 'info' | 'warning' | 'critical';
   message: string;
   detail?: string;
 }
