@@ -5,6 +5,7 @@ import { buildFrequencyMaps } from './histogram';
 import { inferDesignTokens } from './tokenInferrer';
 import { generateSuggestions } from './suggestions';
 import { computeContrast } from './contrast';
+import { detectLayoutIssues } from './layoutDetector';
 import { classifyElement } from './elementClassifier';
 import { isInteractive, hasTextContent } from '../utils/dom';
 import { truncateClasses } from '../utils/format';
@@ -145,6 +146,9 @@ export class PageAnalyzer {
           detail: `${contrast.ratio}:1 — may affect readability`,
         });
       }
+
+      const layoutIssues = detectLayoutIssues(el.element);
+      suggestions.push(...layoutIssues);
 
       if (suggestions.length > 0) {
         flagged.push({
